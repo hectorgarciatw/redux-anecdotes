@@ -1,4 +1,4 @@
-// For the vote anecdote process
+// For the vote anecdote
 export const voteAnecdote = (id) => {
     return {
         type: "VOTE",
@@ -6,7 +6,7 @@ export const voteAnecdote = (id) => {
     };
 };
 
-// For the anecdote create process
+// For the anecdote create
 export const createAnecdote = (content) => {
     return {
         type: "CREATE",
@@ -15,6 +15,13 @@ export const createAnecdote = (content) => {
             id: getId(),
             votes: 0,
         },
+    };
+};
+
+export const setFilter = (filter) => {
+    return {
+        type: "SET_FILTER",
+        data: filter,
     };
 };
 

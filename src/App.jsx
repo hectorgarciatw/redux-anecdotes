@@ -5,6 +5,7 @@ import { voteAnecdote, createAnecdote } from "./actions";
 // Components
 import AnecdoteForm from "./components/AnecdoteForm";
 import AnecdoteList from "./components/AnecdoteList";
+import Filter from "./components/Filter";
 
 const App = () => {
     const anecdotes = useSelector((state) => state);
@@ -16,12 +17,13 @@ const App = () => {
     const addAnecdote = (event) => {
         event.preventDefault();
         dispatch(createAnecdote(newAnecdote));
-        setNewAnecdote(""); // Limpiar el campo después de agregar
+        setNewAnecdote("");
     };
 
     return (
         <div>
             <h2>Anecdotes</h2>
+            <Filter />
             <AnecdoteList />
             <AnecdoteForm />
         </div>
