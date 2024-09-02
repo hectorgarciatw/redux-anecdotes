@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setFilter } from "../reducers/filterSlice"; // Importa la nueva acción
+import { setFilter } from "../reducers/filterSlice";
 
 const Filter = () => {
     const dispatch = useDispatch();

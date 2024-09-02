@@ -1,28 +1,21 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { createAnecdote } from "../actions";
 
-const AnecdoteForm = () => {
-    const dispatch = useDispatch();
+const AnecdoteForm = ({ addAnecdote }) => {
     const [newAnecdote, setNewAnecdote] = useState("");
 
-    // Creates a new anecdote
-    const addAnecdote = (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
-        dispatch(createAnecdote(newAnecdote));
-        setNewAnecdote("");
+        if (newAnecdote.trim() !== "") {
+            addAnecdote(newAnecdote);
+            setNewAnecdote("");
+        }
     };
 
     return (
-        <div>
-            <h2>create new</h2>
-            <form onSubmit={addAnecdote}>
-                <div>
-                    <input value={newAnecdote} onChange={(e) => setNewAnecdote(e.target.value)} />
-                </div>
-                <button type="submit">create</button>
-            </form>
-        </div>
+        <form onSubmit={handleSubmit}>
+            <input type="text" value={newAnecdote} onChange={({ target }) => setNewAnecdote(target.value)} />
+            <button type="submit">Create</button>
+        </form>
     );
 };
 

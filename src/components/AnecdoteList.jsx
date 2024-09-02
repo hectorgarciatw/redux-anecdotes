@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { voteAnecdote } from "../reducers/anecdoteSlice";
+import { voteAndNotify } from "../reducers/anecdoteSlice";
 import { setFilter } from "../reducers/filterSlice";
 
 const AnecdoteList = () => {
@@ -8,7 +8,7 @@ const AnecdoteList = () => {
     const filter = useSelector((state) => state.filter);
 
     const vote = (id) => {
-        dispatch(voteAnecdote(id));
+        dispatch(voteAndNotify(id));
     };
 
     // Filtering anecdotes
