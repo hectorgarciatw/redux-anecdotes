@@ -1,11 +1,12 @@
 import { useDispatch } from "react-redux";
-import { setFilter } from "../actions";
+import { setFilter } from "../reducers/filterSlice"; // Importa la nueva acción
 
 const Filter = () => {
     const dispatch = useDispatch();
 
     const handleChange = (event) => {
-        dispatch(setFilter(event.target.value));
+        const filterValue = event.target.value;
+        dispatch(setFilter(filterValue));
     };
 
     const style = {
