@@ -11,10 +11,8 @@ const AnecdoteList = () => {
         dispatch(voteAndNotify(id));
     };
 
-    // Filtering anecdotes
     const filteredAnecdotes = anecdotes.filter((anecdote) => anecdote.content.toLowerCase().includes(filter.toLowerCase()));
 
-    // Ascending order
     const sortedAnecdotes = [...filteredAnecdotes].sort((a, b) => b.votes - a.votes);
 
     return (

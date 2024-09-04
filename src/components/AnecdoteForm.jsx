@@ -1,19 +1,22 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { createAndNotify } from "../reducers/anecdoteSlice";
 
-const AnecdoteForm = ({ addAnecdote }) => {
-    const [newAnecdote, setNewAnecdote] = useState("");
+const AnecdoteForm = () => {
+    const [content, setContent] = useState("");
+    const dispatch = useDispatch();
 
-    const handleSubmit = (event) => {
+    const addAnecdote = (event) => {
         event.preventDefault();
-        if (newAnecdote.trim() !== "") {
-            addAnecdote(newAnecdote);
-            setNewAnecdote("");
-        }
+        dispatch(createAndNotify(content));
+        setContent("");
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <input type="text" value={newAnecdote} onChange={({ target }) => setNewAnecdote(target.value)} />
+        <form onSubmit={addAnecdote}>
+            <div>
+                <input type="text" value={content} onChange={(e) => setContent(e.target.value)} placeholder="Enter your anecdote" />
+            </div>
             <button type="submit">Create</button>
         </form>
     );

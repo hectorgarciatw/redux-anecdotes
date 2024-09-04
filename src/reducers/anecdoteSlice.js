@@ -1,31 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
 import { setNotification, clearNotification } from "./notificationSlice";
-
-const anecdotesAtStart = [
-    "If it hurts, do it more often",
-    "Adding manpower to a late software project makes it later!",
-    "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
-    "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
-    "Premature optimization is the root of all evil.",
-    "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
-];
-
-const getId = () => (100000 * Math.random()).toFixed(0);
-
-const asObject = (anecdote) => {
-    return {
-        content: anecdote,
-        id: getId(),
-        votes: 0,
-    };
-};
-
-const initialState = anecdotesAtStart.map(asObject);
 
 const anecdoteSlice = createSlice({
     name: "anecdotes",
-    initialState,
+    initialState: [],
     reducers: {
+        setAnecdotes: (state, action) => {
+            return action.payload;
+        },
         voteAnecdote: (state, action) => {
             const id = action.payload;
             const anecdoteToChange = state.find((anecdote) => anecdote.id === id);
@@ -34,23 +17,28 @@ const anecdoteSlice = createSlice({
             }
         },
         createAnecdote: (state, action) => {
-            const newAnecdote = {
-                content: action.payload,
-                id: getId(),
-                votes: 0,
-            };
-            state.push(newAnecdote);
+            state.push(action.payload);
         },
-        resetAnecdotes: (state) => initialState,
     },
 });
 
-export const { voteAnecdote, createAnecdote, resetAnecdotes } = anecdoteSlice.actions;
+export const { setAnecdotes, voteAnecdote, createAnecdote } = anecdoteSlice.actions;
+
+export const initializeAnecdotes = () => {
+    return async (dispatch) => {
+        const response = await axios.get("http://localhost:3001/anecdotes");
+        dispatch(setAnecdotes(response.data));
+    };
+};
 
 export const voteAndNotify = (id) => {
     return async (dispatch) => {
-        dispatch(voteAnecdote(id));
+        const response = await axios.patch(`http://localhost:3001/anecdotes/${id}`, {
+            votes: (anecdote) => anecdote.votes + 1,
+        });
+        dispatch(voteAnecdote(response.data.id));
         dispatch(setNotification("You voted for an anecdote"));
+
         setTimeout(() => {
             dispatch(clearNotification());
         }, 5000);
@@ -59,7 +47,11 @@ export const voteAndNotify = (id) => {
 
 export const createAndNotify = (content) => {
     return async (dispatch) => {
-        dispatch(createAnecdote(content));
+        const response = await axios.post("http://localhost:3001/anecdotes", {
+            content,
+            votes: 0,
+        });
+        dispatch(createAnecdote(response.data));
         dispatch(setNotification("You created a new anecdote"));
 
         setTimeout(() => {
