@@ -32,9 +32,10 @@ export const initializeAnecdotes = () => {
 };
 
 export const voteAndNotify = (id) => {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+        const anecdote = getState().anecdotes.find((anecdote) => anecdote.id === id);
         const response = await axios.patch(`http://localhost:3001/anecdotes/${id}`, {
-            votes: (anecdote) => anecdote.votes + 1,
+            votes: anecdote.votes + 1,
         });
         dispatch(voteAnecdote(response.data.id));
         dispatch(setNotification("You voted for an anecdote"));
