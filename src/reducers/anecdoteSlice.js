@@ -10,11 +10,8 @@ const anecdoteSlice = createSlice({
             return action.payload;
         },
         voteAnecdote: (state, action) => {
-            const id = action.payload;
-            const anecdoteToChange = state.find((anecdote) => anecdote.id === id);
-            if (anecdoteToChange) {
-                anecdoteToChange.votes += 1;
-            }
+            const updatedAnecdote = action.payload;
+            return state.map((anecdote) => (anecdote.id !== updatedAnecdote.id ? anecdote : updatedAnecdote));
         },
         createAnecdote: (state, action) => {
             state.push(action.payload);
@@ -34,11 +31,14 @@ export const initializeAnecdotes = () => {
 export const voteAndNotify = (id) => {
     return async (dispatch, getState) => {
         const anecdote = getState().anecdotes.find((anecdote) => anecdote.id === id);
-        const response = await axios.patch(`http://localhost:3001/anecdotes/${id}`, {
+        const updatedAnecdote = {
+            ...anecdote,
             votes: anecdote.votes + 1,
-        });
-        dispatch(voteAnecdote(response.data.id));
-        dispatch(setNotification("You voted for an anecdote"));
+        };
+        const response = await axios.patch(`http://localhost:3001/anecdotes/${id}`, updatedAnecdote);
+
+        dispatch(voteAnecdote(response.data));
+        dispatch(setNotification(`You voted for '${response.data.content}'`));
 
         setTimeout(() => {
             dispatch(clearNotification());
